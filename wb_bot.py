@@ -53,7 +53,7 @@ def load_config() -> Dict[str, Any]:
     config = {
         "OPENAI_API_KEY": os.getenv("OPENAI_API_KEY"),
         "WB_API_URL": "https://feedbacks-api.wildberries.ru/api/v1",
-        "REVIEWS_PER_PAGE": int(os.getenv("REVIEWS_PER_PAGE", "50")),
+        "REVIEWS_PER_PAGE": int(os.getenv("REVIEWS_PER_PAGE")),
         "CHECK_INTERVAL_MINUTES": int(os.getenv("CHECK_INTERVAL_MINUTES", "5")),
         "MAX_RETRIES": int(os.getenv("MAX_RETRIES", "3")),
         "RETRY_DELAY_SECONDS": float(os.getenv("RETRY_DELAY_SECONDS", "0.5")),
