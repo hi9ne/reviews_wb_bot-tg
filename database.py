@@ -18,17 +18,10 @@ DB_HOST = "localhost"  # или IP-адрес сервера, если отли�
 DB_NAME = "u3132037_default"
 
 # Создание URL для подключения к базе данных
-DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Создание движка SQLAlchemy с явным указанием драйвера
-engine = create_engine(
-    DATABASE_URL,
-    pool_pre_ping=True,
-    pool_recycle=3600,
-    connect_args={
-        "charset": "utf8mb4"
-    }
-)
+engine = create_engine(DATABASE_URL)
 
 # Создание базового класса для моделей
 Base = declarative_base()
