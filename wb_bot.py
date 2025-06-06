@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 import asyncio
 import aiohttp
 from concurrent.futures import ThreadPoolExecutor
-from database import Store, get_user_stores, update_store_statistics, session_scope, init_db
+from database import Store, get_user_stores, update_store_statistics, session_scope
 import openai
 
 # Настройка логирования
@@ -310,10 +310,10 @@ class WBFeedbackBot:
     async def send_response(self, feedback_id: str, text: str) -> bool:
         """Отправляет ответ на отзыв через API Wildberries"""
         url = f"{self.config['WB_API_URL']}/feedbacks/answer"
-                    
+        
         headers = {
-                            "Authorization": f"Bearer {self.store['wb_api_key']}",
-                            "Content-Type": "application/json"
+            "Authorization": f"Bearer {self.store['wb_api_key']}",
+            "Content-Type": "application/json"
         }
         
         data = {
@@ -335,7 +335,7 @@ class WBFeedbackBot:
             
             if attempt < 3:
                 await asyncio.sleep(1)
-                
+        
         logging.error(f"Не удалось отправить ответ на отзыв {feedback_id}")
         return False
     
@@ -375,7 +375,7 @@ class WBFeedbackBot:
                 messages=request_data["messages"],
                 timeout=self.config["OPENAI_TIMEOUT_SECONDS"]
             )
-                
+            
             # Извлекаем сгенерированный ответ
             if not response.choices:
                 logging.error("В ответе API отсутствует поле choices")
@@ -467,6 +467,7 @@ class WBFeedbackBot:
         
 async def process_all_stores():
     """Параллельная обработка отзывов для всех магазинов"""
+    tasks = []  # Инициализируем список задач
     try:
         # Загружаем конфигурацию
         config = load_config()
@@ -482,7 +483,6 @@ async def process_all_stores():
             logging.info(f"Найдено {len(stores)} магазинов для обработки")
             
             # Создаем задачи для каждого магазина
-            tasks = []
             for store in stores:
                 # Проверяем валидность API ключа
                 if not check_api_key_expiration(store.wb_api_key):
@@ -530,13 +530,14 @@ async def process_all_stores():
         logging.error(f"Критическая ошибка при обработке магазинов: {str(e)}", exc_info=True)
         
     finally:
-        # Закрываем все сессии
-        for store_name, task in tasks:
-            try:
-                bot = WBFeedbackBot(config, {'name': store_name})
-                await bot.close_session()
-            except Exception as e:
-                logging.error(f"Ошибка при закрытии сессии для магазина {store_name}: {str(e)}")
+        # Закрываем все сессии только если есть задачи
+        if tasks:
+            for store_name, task in tasks:
+                try:
+                    bot = WBFeedbackBot(config, {'name': store_name})
+                    await bot.close_session()
+                except Exception as e:
+                    logging.error(f"Ошибка при закрытии сессии для магазина {store_name}: {str(e)}")
 
 async def run_periodic_processing():
     """Периодический запуск обработки отзывов"""

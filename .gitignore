@@ -33,26 +33,9 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual Environment
-venv/
-ENV/
-
 # IDE
 .idea/
 .vscode/
 *.swp
 *.swo
-.DS_Store
-
-# Environment variables
-.env
-
-# Logs
-*.log
-
-# Database
-*.db
-*.sqlite3
-
-# Other
 .DS_Store 

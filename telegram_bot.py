@@ -1,21 +1,29 @@
 import logging
-import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler, ContextTypes, filters
+import asyncio
 from database import (
     add_store, 
     get_store, 
+    get_user_stores, 
+    delete_store, 
     get_store_by_api_key, 
+    Session, 
     Store,
     get_store_statistics,
-    session_scope
+    update_store_statistics
 )
-from wb_bot import check_api_key_expiration
+from wb_bot import WBFeedbackBot, check_api_key_expiration
+import os
 from dotenv import load_dotenv
+from sqlalchemy.orm import Session
+from database import Store
+from database import session_scope
 
 # Загрузка конфигурации
 load_dotenv()
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 
 # Состояния для FSM
 class States:
