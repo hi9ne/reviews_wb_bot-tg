@@ -6,7 +6,6 @@ from datetime import datetime
 from contextlib import contextmanager
 import os
 from dotenv import load_dotenv
-import pymysql
 
 # Загрузка переменных окружения
 load_dotenv()
