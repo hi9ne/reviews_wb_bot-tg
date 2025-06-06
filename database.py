@@ -6,7 +6,7 @@ from datetime import datetime
 from contextlib import contextmanager
 import os
 from dotenv import load_dotenv
-import pymysql
+from typing import List, Optional
 
 # Загрузка переменных окружения
 load_dotenv()
@@ -94,7 +94,7 @@ def get_store(name: str) -> Store:
     with session_scope() as session:
         return session.query(Store).filter_by(name=name).first()
 
-def get_user_stores(telegram_user_id: str) -> list[Store]:
+def get_user_stores(telegram_user_id: str) -> List[Store]:
     """Получение всех магазинов пользователя или всех магазинов, если id не указан"""
     with session_scope() as session:
         if telegram_user_id is None:
