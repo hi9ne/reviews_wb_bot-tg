@@ -6,7 +6,10 @@ from datetime import datetime
 from contextlib import contextmanager
 import os
 from dotenv import load_dotenv
+<<<<<<< HEAD
 from typing import List, Optional
+=======
+>>>>>>> 3fbc23b31498ea9f04595cfef8c26548fdc8465c
 
 # Загрузка переменных окружения
 load_dotenv()
